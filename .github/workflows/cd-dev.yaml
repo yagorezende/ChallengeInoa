@@ -8,6 +8,8 @@ jobs:
   ci:
     name: ci dev
     uses: ./.github/workflows/ci.yaml
+    with:
+      image_tag: dev
 
   build:
     name: Build

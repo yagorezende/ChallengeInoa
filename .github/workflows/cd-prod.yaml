@@ -8,6 +8,8 @@ jobs:
   ci:
     name: ci prod
     uses: ./.github/workflows/ci.yaml
+    with:
+      image_tag: latest
 
   build:
     name: Build

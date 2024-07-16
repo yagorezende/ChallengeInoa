@@ -1,9 +1,15 @@
 name: CI 🚥
 run-name: Continuous Integration 🚥
 on:
+  workflow_call:
+    inputs:
+      image_tag:
+        required: false
+        type: string
   pull_request:
     branches:
-      - "*" # All branches
+      - main
+      - development
 jobs:
   runs-on: ubuntu-22.04
   tests:
