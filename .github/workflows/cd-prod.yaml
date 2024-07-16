@@ -14,7 +14,7 @@ jobs:
   build:
     name: Build
     needs: ci
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Get tag # This is not used for now, we use tag from cd-prod.yaml or cd-dev.yaml workflows
         id: repository
