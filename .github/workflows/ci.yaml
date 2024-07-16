@@ -1,13 +1,19 @@
 name: CI 🚥
 run-name: Continuous Integration 🚥
 on:
+  workflow_call:
+    inputs:
+      image_tag:
+        required: false
+        type: string
   pull_request:
     branches:
-      - "*" # All branches
+      - main
+      - development
 jobs:
-  runs-on: ubuntu-22.04
   tests:
     name: Django tests
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5.1.0
@@ -23,6 +29,7 @@ jobs:
           coverage report -m | awk 'NR==1 || /views.py/'
   pylint:
     name: Python lint
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5.1.0
@@ -69,7 +76,7 @@ jobs:
   build:
     name: Build
     needs: [tests, pylint, hadolint]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Get tag # This is not used for now, we use tag from cd-prod.yaml or cd-dev.yaml workflows
         id: repository
