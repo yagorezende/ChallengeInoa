@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ChallengeInoa.urls'
+ROOT_URLCONF = 'challenge_inoa.urls'
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ChallengeInoa.wsgi.application'
+WSGI_APPLICATION = 'challenge_inoa.wsgi.application'
 
 
 # Database

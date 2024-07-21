@@ -1,4 +1,4 @@
-.PHONY: run build
+.PHONY: run build run-docker create-key create-user migration
 	
 run:
 	python3 manage.py runserver 8000
