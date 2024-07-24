@@ -37,7 +37,7 @@ class Contact(models.Model):
 class Stock(models.Model):
     """
     Modelo para armazenar as informações sobre as ações das empresas.
-    Utilize este modelo para identificar as empresas que serão monitoradas.
+    Utilize este modelo para identificar as empresas que podem ser monitoradas.
     """
     company_name = models.CharField(max_length=128, null=False, blank=False)
     symbol = models.CharField(max_length=12, null=False, blank=False)

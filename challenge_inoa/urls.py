@@ -16,10 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
-import dashboard
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('', include('dashboard.urls')),
+    path('api/', include('engine.urls')),
+    path('api/docs/', include_docs_urls(title='Inoa Stocks API')),
     path('admin/', admin.site.urls),
 ]
