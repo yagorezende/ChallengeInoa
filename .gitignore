@@ -1,4 +1,7 @@
 .venv
 *.pyc
 .idea
+.env
+.coverage
 db.sqlite3
+**/migrations/0*.py
