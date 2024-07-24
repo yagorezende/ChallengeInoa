@@ -1,0 +1,48 @@
+html,
+body {
+    height: 100%;
+}
+
+.primary-color {
+    color: #005984;
+}
+
+.dark-background{
+    color: white;
+    background-color: #001b26;
+}
+
+.deepdark-background{
+    color: white;
+    background-color: #000f11;
+}
+
+.dark-btn{
+    color: white;
+    background-color: #001b26;
+}
+
+.dark-btn:hover, .dark-btn:active, .dark-btn:focus{
+    color: white;
+    background-color: #012c3d;
+}
+
+.light-text{
+    color: #f5f5f5 !important;
+}
+
+.darkgray-text{
+    color: #0B0E11FF;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+}
+
+.horizontal-gradient {
+    background-image: linear-gradient(to right, #005984, #318b8c);
+}
