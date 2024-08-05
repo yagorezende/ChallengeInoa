@@ -1,5 +1,6 @@
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 
+from .utils.paginators import DefaultNumberPagination
 from .utils.utils import get_proper_serializer
 
 
@@ -15,6 +16,7 @@ class MultiSerializerListApiView(ListAPIView):
     basic_serializer_class = None
     aggregated_serializer_class = None
     should_check_status = True  # field to ignore the archived status filter
+    pagination_class = DefaultNumberPagination
     hidden_status = ["archived"]
     order_by = "-id"
 

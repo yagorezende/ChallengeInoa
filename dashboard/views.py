@@ -18,7 +18,12 @@ def system_login(request):
         user = authenticate(request, username=request.POST.get('username'), password=request.POST.get('password'))
         if user is not None:
             login(request, user)
-            return redirect('/')
+
+            # add a token cookie
+            response = redirect('/')
+            response.set_cookie('token', user.auth_token.key)
+
+            return response
         context['error'] = "Usuário e senha inválidos!"
 
     return render(request, 'login.html', context)

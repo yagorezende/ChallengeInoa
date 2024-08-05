@@ -42,6 +42,9 @@ class Stock(models.Model):
     company_name = models.CharField(max_length=128, null=False, blank=False)
     symbol = models.CharField(max_length=12, null=False, blank=False)
 
+    def __str__(self):
+        return f"{self.symbol} - {self.company_name}"
+
 
 class StockPrice(models.Model):
     """
