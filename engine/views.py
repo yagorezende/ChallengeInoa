@@ -43,6 +43,16 @@ class UserMonitorStockListAPIView(MultiSerializerListApiView, CreateAPIView):
     basic_serializer_class = UserMonitorStockBasicSerializer
     aggregated_serializer_class = UserMonitorStockAggregatedSerializer
 
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        data_dict = dict((key, value)  for key, value in request.data.items())
+        data_dict['user'] = user.id
+        serializer = self.get_serializer(data=data_dict)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserMonitorStockDetailAPIView(MultiSerializerDetailApiView):
     permission_classes = [IsAuthenticated]

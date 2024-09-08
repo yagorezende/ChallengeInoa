@@ -17,6 +17,16 @@
         })
 })();
 
+// start create monitor select options
+$(document).ready(function () {
+    loadList('/api/v1/stock/', {page_size: 5}, function (options) {
+        // fill the dropdown with options
+        options.forEach(option => {
+            $('#dropdownOptions').append(`<a href="#" data-stock-id="${option.id}" onclick="setSelectedStock(this)" class="list-group-item list-group-item-action">${option.symbol} - ${option.company_name}</a>`);
+        });
+    });
+});
+
 // Dropdown search box
 $(document).ready(function () {
     $('#searchBox').on('input', function () {
@@ -56,6 +66,40 @@ $(document).ready(function () {
     };
     $('.money-mask').each(function () {
         IMask(this, maskOptions)
+    });
+});
+
+// send form with auth token
+$(document).ready(function () {
+    $('#createMonitorForm').submit(function (event) {
+        loadingAnimation();
+        event.preventDefault();
+        let jsonData = {
+            stock: $('#stockId').val(),
+            price_limit_top: $('#price_limit_top').val(),
+            price_limit_bottom: $('#price_limit_bottom').val(),
+            // interval: $('#intervalSelect').val(),
+            notify: $('#notify').is(':checked'),
+        }
+
+        $.ajax({
+            url: $(this).attr('action'),
+            method: 'POST',
+            data: JSON.stringify(jsonData),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'token ' + getCookie('token'),
+            },
+            success: function (response) {
+                showAlert('success', "Monitor criado com sucesso!");
+                loadingAnimation(false);
+            },
+            error: function (response) {
+                // show error message using bootstrap alert
+                showAlert('danger', "Erro ao criar monitor. Tente novamente mais tarde.");
+                loadingAnimation(false);
+            }
+        });
     });
 });
 
@@ -108,6 +152,7 @@ function loadList(endpoint, query, callback) {
 
 async function getStockPriceNow(stockId) {
     let price = {};
+    loadingAnimation();
     await $.ajax({
         url: `/api/v1/stock-price/now/${stockId}/`,
         method: 'GET',
@@ -117,7 +162,11 @@ async function getStockPriceNow(stockId) {
         },
         success: function (response) {
             price = response?.price;
+            loadingAnimation(false);
         },
+        error: function (response) {
+            loadingAnimation(false);
+        }
     });
     return price;
 }
@@ -138,6 +187,32 @@ async function setSelectedStock(element) {
         $('#price_limit_top').val((price?.regularMarketPrice + variation).toFixed(2));
         $('#price_limit_bottom').val((price?.regularMarketPrice - variation).toFixed(2));
     });
+}
+
+function showAlert(type, message) {
+    $('.alert-' + type + ' .alert-msg').text(message);
+    $('.alert-' + type).attr('hidden', false);
+    $('.alert-' + type).addClass('show');
+
+    // hide the alert after 5 seconds
+    setTimeout(function () {
+        $('.alert-' + type).removeClass('show');
+        $('.alert-' + type).attr('hidden', true);
+    }, 5000);
+}
+
+function loadingAnimation(on = true) {
+    if (on) {
+        $("#loadingBackdrop").addClass('active'); // Show the backdrop and spinner
+        // Hide the loading backdrop after 5 seconds as a backup of errors
+        setTimeout(function () {
+            $("#loadingBackdrop").removeClass('active');// Hide the backdrop and spinner
+        }, 5000);
+        return;
+    }
+    $("#loadingBackdrop").removeClass('active');// Hide the backdrop and spinner
+
+
 }
 
 // END OF [HELPER FUNCTIONS]

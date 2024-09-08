@@ -44,7 +44,7 @@
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
 </head>
 <body>
-<div class="wrapper w-100">
+<div class="wrapper w-100">    
     <!-- Sidebar -->
     <div class="sidebar dark-background">
         <div class="sidebar-logo">
@@ -125,6 +125,7 @@
         </div>
 
         <div class="container">
+            {% include 'imports/alerts.html' %}
             <div class="page-inner">
                 <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                     <div>
@@ -139,6 +140,13 @@
                 </div>
 
                 <!-- Main Content -->
+            </div>
+        </div>
+        
+        <!-- Backdrop loading spinner -->
+        <div id="loadingBackdrop" class="d-flex m-0 p-0" hidden>
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Inoa Stocks ...</span>
             </div>
         </div>
 
