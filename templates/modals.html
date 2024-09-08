@@ -10,13 +10,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <form action="/api/v1/user-monitor-stock/" method="post">
+                <form id="createMonitorForm" action="/api/v1/user-monitor-stock/" method="post">
                     <div class="modal-body">
                         <div class="container mt-2 w-100">
                             <div class="d-grid gap-2">
                                 <!-- Stock Options -->
                                 <label for="basic-url" class="form-label">Opções de Ativos</label>
-                                <input id="stockId" name="stock_id" hidden/>
+                                <input id="stockId" name="stock" hidden/>
                                 <button class="btn dark-btn dropdown-toggle" type="button"
                                         id="stocksDropdown"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,7 +52,7 @@
                                 <!-- Tunnel -->
                                 <label for="basic-url" class="form-label">Intervalo de Coleta</label>
                                 <div class="form-floating form-floating-custom">
-                                    <select class="form-select" id="selectFloatingLabel" name="interval" required>
+                                    <select class="form-select" id="intervalSelect" name="interval" required>
                                         <option value="1" selected="">1 m</option>
                                         <option value="2">2 m</option>
                                         <option value="5">5 m</option>
@@ -61,7 +61,7 @@
                                         <option value="60">60 m</option>
                                         <option value="90">90 m</option>
                                     </select>
-                                    <label for="selectFloatingLabel">Minutos</label>
+                                    <label for="intervalSelect">Minutos</label>
                                 </div>
 
                                 <!-- Notify option -->
