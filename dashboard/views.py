@@ -2,6 +2,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from standard.models import UserMonitorStock
+
 
 def system_login(request):
     """
@@ -38,6 +40,7 @@ def system_logout(request):
 @login_required
 def dashboard(request):
     context = {
-        'user': request.user
+        'user': request.user,
+        'monitor_stocks': UserMonitorStock.objects.filter(user=request.user, status='active')
     }
     return render(request, "dashboard.html", context)
