@@ -4,7 +4,7 @@ from standard.models import Stock
 
 
 class Command(BaseCommand):
-    help = "Import B3 .csv file containing the companies simbol and name"
+    help = "Import B3 .csv file containing the companies symbol and name"
 
     def add_arguments(self, parser):
         parser.add_argument("--input", nargs=None, type=str)

@@ -1,6 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from challenge_inoa.settings import STOCK_INTERVAL_CHOICES
+
 
 class TimeStampedModel(models.Model):
     """
@@ -53,6 +55,10 @@ class StockPrice(models.Model):
     """
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
+    open_price = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
+    close_price = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
+    high_price = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
+    low_price = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False, default=0)
     timestamp = models.DateTimeField(null=False, blank=False)
 
 
@@ -62,7 +68,7 @@ class UserMonitorStock(TimeStampedModel):
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE, related_name='monitors')
-    interval = models.PositiveIntegerField(null=False, blank=False)  # editável
+    interval = models.PositiveIntegerField(null=False, blank=False, choices=STOCK_INTERVAL_CHOICES)  # editável
     price_limit_top = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)  # editável
     price_limit_bottom = models.DecimalField(max_digits=10, decimal_places=2, null=False, blank=False)  # editável
     notify = models.BooleanField(default=True)  # editável
