@@ -1,11 +1,10 @@
-import json
-
 from django.http import JsonResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 from engine.stocks.interface import StockInterface
 from standard.generics import MultiSerializerListApiView, MultiSerializerDetailApiView
@@ -94,3 +93,22 @@ class StockPriceNow(MultiSerializerListApiView):
             serializer['price'] = dict(stock_data.get('results')[0]) if stock_data.get('results') else None
             return JsonResponse(serializer, safe=False, status=status.HTTP_200_OK)
         return JsonResponse({'error': "Erro ao buscar valor do ativo"}, stock_data, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserMonitorStockDataView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        monitor = get_object_or_404(UserMonitorStock, user=user, id=request.query_params.get('monitor'))
+        points = int(request.query_params.get('points', 10))
+        stock_prices = StockPrice.objects.filter(stock=monitor.stock).order_by('-timestamp')[:points]
+        data = {
+            'monitor_id': monitor.id,
+            'price_limit_top': monitor.price_limit_top,
+            'price_limit_bottom': monitor.price_limit_bottom,
+            'prices': StockPriceBasicSerializer(stock_prices, many=True).data
+        }
+
+        return JsonResponse(data, safe=False, status=status.HTTP_200_OK)
+
