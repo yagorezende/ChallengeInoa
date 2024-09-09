@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from celery.schedules import crontab
 
 load_dotenv()
 
@@ -142,3 +143,36 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_ADDRESS')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# Celery Config
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis server
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
+
+STOCK_INTERVAL_CHOICES = [
+    (1, '1 minuto'),
+    (2, '2 minutos'),
+    (5, '5 minutos'),
+    (15, '15 minutos'),
+    (30, '30 minutos'),
+    (60, '1 hora'),
+    (90, '1 hora e meia'),
+]
+
+CELERY_BEAT_SCHEDULE = dict([
+    (f'{interval}-minute-monitor', {
+        'task': 'engine.tasks.task_monitor',
+        'args': (interval,),
+        'schedule': crontab(minute=f'*/{interval}'),  # Run every minute
+    },) for interval, label in STOCK_INTERVAL_CHOICES
+])

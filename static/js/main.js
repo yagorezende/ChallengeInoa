@@ -78,7 +78,7 @@ $(document).ready(function () {
             stock: $('#stockId').val(),
             price_limit_top: $('#price_limit_top').val(),
             price_limit_bottom: $('#price_limit_bottom').val(),
-            // interval: $('#intervalSelect').val(),
+            interval: $('#intervalSelect').val(),
             notify: $('#notify').is(':checked'),
         }
 
@@ -93,11 +93,21 @@ $(document).ready(function () {
             success: function (response) {
                 showAlert('success', "Monitor criado com sucesso!");
                 loadingAnimation(false);
+                // reset form
+                $('#createMonitorForm').trigger('reset');
+                // close modal
+                $('#createMonitorModal').toggle();
+
+                // reload the page after 2 seconds
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
             },
             error: function (response) {
                 // show error message using bootstrap alert
                 showAlert('danger', "Erro ao criar monitor. Tente novamente mais tarde.");
                 loadingAnimation(false);
+                $('#createMonitorModal').toggle();
             }
         });
     });

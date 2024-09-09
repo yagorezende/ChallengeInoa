@@ -31,6 +31,10 @@ class StockPriceBasicSerializer(serializers.ModelSerializer):
             'id',
             'stock',
             'price',
+            'open_price',
+            'close_price',
+            'high_price',
+            'low_price',
             'timestamp',
         ]
 

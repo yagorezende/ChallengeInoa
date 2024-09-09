@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -157,13 +157,26 @@
                                     <div class="col-3">
                                         <div class="numbers">
                                             <h4 class="card-title">{{ monitor.stock }}</h4>
+                                            <div class="vstack">
+                                                <div class="text">
+                                                    <p>Valor Atual R$ <span id="monitor-{{ monitor.id }}-current-price">N/A</span></p>
+                                                    <p>Valor de Abertura R$ <span id="monitor-{{ monitor.id }}-open-price">N/A</span></p>
+                                                    <p>Variação R$ <span id="monitor-{{ monitor.id }}-variation-price">N/A</span></p>
+                                                    
+                                                    <!-- Divider -->
+                                                    <hr class="divider">
+                                                    <p>Limite Superior R$ {{ monitor.price_limit_top }}</p>
+                                                    <p>Limite Inferior R$ {{ monitor.price_limit_bottom }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer">
+                                <p>Criado em {{ monitor.created_at }}</p>
                                 <div class="stats float-end">
-                                    <a href="#" class="btn btn-round btn-outline-danger">Arquivar</a>
+                                    <a href="#" class="btn btn-round btn-outline-danger">Desativar</a>
                                 </div>
                             </div>
                         </div>
@@ -202,111 +215,6 @@
         </footer>
     </div>
 </div>
-
-<script>
-    var barCount = 50;
-    var initialDateStr = new Date().toUTCString();
-
-    var ctx = document.getElementsByClassName('stock-chart')[0].getContext('2d');
-    ctx.canvas.width = '10rem';
-    ctx.canvas.height = '10rem';
-
-    var barData = new Array(barCount);
-    var lineData = new Array(barCount);
-
-    getRandomData(initialDateStr);
-
-    let top_limit = Math.max(...lineData.map(x => x.y)) - Math.min(...lineData.map(x => x.y)) * 0.1;
-    let bottom_limit = Math.min(...lineData.map(x => x.y)) + top_limit * 0.1;
-    
-    var top_line = lineData.map(obj => {return { ...obj, y: top_limit}});
-    var bottom_line = lineData.map(obj => {return { ...obj, y: bottom_limit}});
-
-    var chart = new Chart(ctx, {
-        type: 'candlestick',
-        data: {
-            datasets: [{
-                label: 'CHRT - Chart.js Corporation',
-                data: barData,
-            },
-            {
-                label: 'Close price',
-                type: 'line',
-                data: lineData,
-                hidden: true,
-            },
-            // Top limit line dataset
-            {
-                label: 'Top Price Limit',
-                type: 'line',
-                data: top_line,
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1,
-                borderDash: [5, 5],
-                pointRadius: 0,
-            },
-            // Bottom limit line dataset
-            {
-                label: 'Bottom Price Limit',
-                data: bottom_line,
-                type: 'line',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-                borderDash: [5, 5],
-                pointRadius: 0,
-            }
-            ]
-        }
-    });
-
-    function randomNumber(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-
-    function randomBar(target, index, date, lastClose) {
-        var open = +randomNumber(lastClose * 0.95, lastClose * 1.05).toFixed(2);
-        var close = +randomNumber(open * 0.95, open * 1.05).toFixed(2);
-        var high = +randomNumber(Math.max(open, close), Math.max(open, close) * 1.1).toFixed(2);
-        var low = +randomNumber(Math.min(open, close) * 0.9, Math.min(open, close)).toFixed(2);
-
-        if (!target[index]) {
-            target[index] = {};
-        }
-
-        Object.assign(target[index], {
-            x: date.valueOf(),
-            o: open,
-            h: high,
-            l: low,
-            c: close
-        });
-
-    }
-
-    function getRandomData(dateStr) {
-        var date = luxon.DateTime.fromRFC2822(dateStr);
-
-        for (let i = 0; i < barData.length;) {
-            date = date.plus({days: 1});
-            if (date.weekday <= 5) {
-                randomBar(barData, i, date, i === 0 ? 30 : barData[i - 1].c);
-                lineData[i] = {x: barData[i].x, y: barData[i].c};
-                i++;
-            }
-        }
-    }
-
-
-    var dataset = chart.config.data.datasets[0];
-    chart.config.type = 'candlestick';
-    chart.config.options.scales.y.type = 'linear';
-    delete chart.config.data.datasets[0].backgroundColors;
-    delete dataset.borderColors;
-    chart.config.data.datasets[1].hidden = false;
-    // change line width
-    chart.config.data.datasets[1].borderWidth = .5;
-    chart.update();
-</script>
 
 {% include 'modals.html' %}
 {% include 'imports/scripts.html' %}
