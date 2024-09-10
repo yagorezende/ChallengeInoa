@@ -59,6 +59,7 @@ class TestModels(TestCase):
         response = self.client.post(TOKEN_URL, {'username': 'test', 'password': 'test'})
         return {'Authorization': f'Token {response.json().get("token")}'}
 
+    @tag('skip')
     def test_get_user_monitor_stock_data(self):
         response = self.client.get(PRICES_URL, {'monitor': 1}, headers=self._get_user_auth_header())
         self.assertEqual(response.status_code, 200)

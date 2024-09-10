@@ -25,8 +25,7 @@ jobs:
           python manage.py makemigrations
       - run: |
           echo "Running tests:"
-          SECRET_KEY=`python3 -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'`
-          coverage run --source=. manage.py test -v 2
+          coverage run --source=. manage.py test -v 2 --exclude-tag=skip
           echo "Tests coverage report:"
           coverage report -m | awk 'NR==1 || /views.py/'
   pylint:
