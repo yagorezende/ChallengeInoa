@@ -5,3 +5,10 @@
 .coverage
 db.sqlite3
 **/migrations/0*.py
+.celery-beat.log
+.celery-worker.log
+.celery-beat.pid
+.celery-worker.pid
+.celery-email-worker.pid
+celerybeat-schedule
+media/*

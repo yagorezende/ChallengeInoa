@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -42,6 +42,12 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{% static 'css/demo.css' %}" rel="stylesheet">
     <link href="{% static 'css/main.css' %}" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1.3.1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
 </head>
 <body>
 <div class="wrapper w-100">
@@ -96,6 +102,9 @@
             <!-- Navbar Header -->
             <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                 <div class="container-fluid">
+                    <div class="align-content-center">
+                        <h3 class="fw-bold mt-2">Monitor de Ativos</h3>
+                    </div>
                     <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                         <li class="nav-item topbar-user dropdown hidden-caret darkgray-text">
                             <a
@@ -104,7 +113,7 @@
                                     href="#"
                                     aria-expanded="false"
                             >
-                                <span class="fw-bold">{{ user.username }}</span>
+                                <span class="nav-link">Olá, {{ user.username }}</span>
                                 <i class="fas fa-ellipsis-v mx-2"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -122,6 +131,7 @@
         </div>
 
         <div class="container">
+            {% include 'imports/alerts.html' %}
             <div class="page-inner">
                 <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
                     <div>
@@ -129,11 +139,69 @@
                         <h6 class="op-7 mb-2">Configure seus monitoramentos nesta página</h6>
                     </div>
                     <div class="ms-md-auto py-2 py-md-0">
-                        <a href="#" class="btn btn-round dark-btn">Adicionar Monitor</a>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#createMonitorModal"
+                           class="btn btn-round dark-btn">Adicionar Monitor</a>
                     </div>
                 </div>
 
+                <div>
+                    {% for monitor in monitor_stocks %}
+                        <div class="card card-stats card-round">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-9">
+                                        <div>
+                                            <canvas class="stock-chart" data-monitor-id="{{ monitor.id }}"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="numbers">
+                                            <h4 class="card-title" id="monitor-{{ monitor.id }}-stock-label">{{ monitor.stock }}</h4>
+                                            <div class="vstack">
+                                                <div class="text">
+                                                    <p>Valor Atual R$ <span id="monitor-{{ monitor.id }}-current-price">N/A</span>
+                                                    </p>
+                                                    <p>Valor de Abertura R$ <span
+                                                            id="monitor-{{ monitor.id }}-open-price">N/A</span></p>
+                                                    <p>Variação R$ <span id="monitor-{{ monitor.id }}-variation-price">N/A</span>
+                                                    </p>
+
+                                                    <!-- Divider -->
+                                                    <hr class="divider">
+                                                    <p>Limite Superior R$ <span
+                                                            id="monitor-{{ monitor.id }}-top-price">{{ monitor.price_limit_top }}</span>
+                                                    </p>
+                                                    <p>Limite Inferior R$ <span
+                                                            id="monitor-{{ monitor.id }}-bottom-price">{{ monitor.price_limit_bottom }}</span>
+                                                    </p>
+                                                </div>
+                                                <a href="#" data-bs-toggle="modal"
+                                                   data-bs-target="#editMonitorLimitModal"
+                                                   class="btn btn-round btn-primary mb-2 edit-limit-modal"
+                                                   data-monitor-id="{{ monitor.id }}">Editar Limites</a>
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#archiveMonitorModal"
+                                                   class="btn btn-round btn-outline-danger btn-archive-monitor" data-monitor-id="{{ monitor.id }}">Desativar</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <p>Criado em {{ monitor.created_at }} <strong>com periodo
+                                    de {{ monitor.interval }}m</strong></p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
                 <!-- Main Content -->
+            </div>
+        </div>
+
+        <!-- Backdrop loading spinner -->
+        <div id="loadingBackdrop" class="d-flex m-0 p-0" hidden>
+            <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Inoa Stocks ...</span>
             </div>
         </div>
 
@@ -159,37 +227,7 @@
     </div>
 </div>
 
-<!--   Core JS Files   -->
-<script src="{% static 'js/core/jquery-3.7.1.min.js' %}"></script>
-<script src="{% static 'js/core/popper.min.js' %}"></script>
-<script src="{% static 'js/core/bootstrap.min.js' %}"></script>
-
-<!-- jQuery Scrollbar -->
-<script src="{% static 'js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
-
-<!-- Chart JS -->
-<script src="{% static 'js/plugin/chart.js/chart.min.js' %}"></script>
-
-<!-- jQuery Sparkline -->
-<script src="{% static 'js/plugin/jquery.sparkline/jquery.sparkline.min.js' %}"></script>
-
-<!-- Chart Circle -->
-<script src="{% static 'js/plugin/chart-circle/circles.min.js' %}"></script>
-
-<!-- Datatables -->
-<script src="{% static 'js/plugin/datatables/datatables.min.js' %}"></script>
-
-<!-- Bootstrap Notify -->
-<script src="{% static 'js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
-
-<!-- jQuery Vector Maps -->
-<script src="{% static 'js/plugin/jsvectormap/jsvectormap.min.js' %}"></script>
-<script src="{% static 'js/plugin/jsvectormap/world.js' %}"></script>
-
-<!-- Sweet Alert -->
-<script src="{% static 'js/plugin/sweetalert/sweetalert.min.js' %}"></script>
-
-<!-- Kaiadmin JS -->
-<script src="{% static 'js/kaiadmin.min.js' %}"></script>
+{% include 'modals.html' %}
+{% include 'imports/scripts.html' %}
 </body>
 </html>

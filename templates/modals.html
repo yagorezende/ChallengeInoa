@@ -1,0 +1,144 @@
+{% load static %}
+{% block modals %}
+    <!-- Modal -->
+    <div class="modal fade" id="createMonitorModal" tabindex="-1" aria-labelledby="createMonitorModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createMonitorModalLabel">Criar Monitor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <form id="createMonitorForm" action="/api/v1/user-monitor-stock/" method="post">
+                    <div class="modal-body">
+                        <div class="container mt-2 w-100">
+                            <div class="d-grid gap-2">
+                                <!-- Stock Options -->
+                                <label for="basic-url" class="form-label">Opções de Ativos</label>
+                                <input id="stockId" name="stock" hidden/>
+                                <button class="btn dark-btn dropdown-toggle" type="button"
+                                        id="stocksDropdown"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ativos Disponíveis
+                                </button>
+                                <ul class="dropdown-menu p-3 mb-3" style="width: 90%" aria-labelledby="stocksDropdown">
+                                    <input type="text" class="form-control mb-3" id="searchBox" placeholder="Buscar...">
+                                    <div id="dropdownOptions" class="list-group overflow-scroll h-25">
+                                        <small class="text-muted">Digite um ativo para pesquisar</small>
+                                    </div>
+                                </ul>
+
+                                <div class="divider"></div>
+
+                                <!-- Tunnel -->
+                                <label for="basic-url" class="form-label">Tunel de Negociação</label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">R$</span>
+                                    <span class="input-group-text">Limite superior</span>
+                                    <input type="text" id="price_limit_top" name="price_limit_top"
+                                           class="form-control money-mask" value="0.00"
+                                           aria-label="Valor em reais (com ponto nas casas decimais)">
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="text" id="price_limit_bottom" name="price_limit_bottom"
+                                           class="form-control money-mask" value="0.00"
+                                           aria-label="Valor em reais (com ponto nas casas decimais)">
+                                    <span class="input-group-text">R$</span>
+                                    <span class="input-group-text">Limite inferior</span>
+                                </div>
+
+                                <!-- Tunnel -->
+                                <label for="basic-url" class="form-label">Intervalo de Coleta</label>
+                                <div class="form-floating form-floating-custom">
+                                    <select class="form-select" id="intervalSelect" name="interval" required>
+                                        <option value="1" selected="">1 m</option>
+                                        <option value="2">2 m</option>
+                                        <option value="5">5 m</option>
+                                        <option value="15">15 m</option>
+                                        <option value="30">30 m</option>
+                                        <option value="60">60 m</option>
+                                        <option value="90">90 m</option>
+                                    </select>
+                                    <label for="intervalSelect">Minutos</label>
+                                </div>
+
+                                <!-- Notify option -->
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="notify" name="notify" checked>
+                                    <label class="form-check-label" for="notify">Notificar por email</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-round btn-outline-dark" data-bs-dismiss="modal">Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-round dark-btn">Criar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="editMonitorLimitModal" tabindex="-1" aria-labelledby="editMonitorLimitModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMonitorLimitModalLabel">Editar Limites</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editMonitorLimitForm" action="/api/v1/user-monitor-stock/" method="put">
+                    <input type="hidden" id="edit-limit-monitor-id">
+                    <div class="modal-body">
+                        <div class="container mt-2 w-100">
+                            <div class="d-grid gap">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">R$</span>
+                                    <span class="input-group-text">Limite superior</span>
+                                    <input type="text" id="edit_price_limit_top" name="price_limit_top"
+                                           class="form-control money-mask" value="0.00"
+                                           aria-label="Valor em reais (com ponto nas casas decimais)">
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="text" id="edit_price_limit_bottom" name="price_limit_bottom"
+                                           class="form-control money-mask" value="0.00"
+                                           aria-label="Valor em reais (com ponto nas casas decimais)">
+                                    <span class="input-group-text">R$</span>
+                                    <span class="input-group-text">Limite inferior</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-round btn-outline-dark" data-bs-dismiss="modal">Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-round dark-btn">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="archiveMonitorModal" tabindex="-1" aria-labelledby="archiveMonitorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="archiveMonitorModalLabel">Desativar Monitor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Deseja desativar o monitor <span id="archive-monitor-stock"></span>?</h5>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-end">
+                        <button type="button" class="btn btn-round btn-outline-dark" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-round dark-btn" id="archive-monitor-btn" data-monitor-id="0">Desativar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

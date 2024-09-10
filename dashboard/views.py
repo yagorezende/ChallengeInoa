@@ -2,6 +2,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
+from standard.models import UserMonitorStock
+
 
 def system_login(request):
     """
@@ -18,7 +20,12 @@ def system_login(request):
         user = authenticate(request, username=request.POST.get('username'), password=request.POST.get('password'))
         if user is not None:
             login(request, user)
-            return redirect('/')
+
+            # add a token cookie
+            response = redirect('/')
+            response.set_cookie('token', user.auth_token.key)
+
+            return response
         context['error'] = "Usuário e senha inválidos!"
 
     return render(request, 'login.html', context)
@@ -33,6 +40,7 @@ def system_logout(request):
 @login_required
 def dashboard(request):
     context = {
-        'user': request.user
+        'user': request.user,
+        'monitor_stocks': UserMonitorStock.objects.filter(user=request.user, status='active')
     }
     return render(request, "dashboard.html", context)
