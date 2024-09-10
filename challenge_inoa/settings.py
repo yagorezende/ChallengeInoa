@@ -154,7 +154,7 @@ EMAIL_HOST_EMAIL_ADDRESS = os.environ.get('EMAIL_HOST_EMAIL_ADDRESS')
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
 
 # Celery Config
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis server
+CELERY_BROKER_URL = f"redis://{os.environ.get('REDIS_HOST')}:{os.environ.get('REDIS_PORT')}/{os.environ.get('REDIS_DB')}"  # Redis server
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
