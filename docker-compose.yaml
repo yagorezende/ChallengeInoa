@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  # redis
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - inoa-stocks-network
+  inoa-stocks:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: inoa-stocks
+    container_name: inoa-stocks
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - BRAPI_KEY=${BRAPI_KEY}
+      - EMAIL_HOST_EMAIL_ADDRESS=${EMAIL_HOST_EMAIL_ADDRESS}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    networks:
+      - inoa-stocks-network
+networks:
+  inoa-stocks-network:
+    driver: bridge
