@@ -47,6 +47,95 @@ $(document).ready(function () {
             });
         });
     });
+
+    // edit limits modal update values
+    $(".edit-limit-modal").click(function () {
+        let monitorId = $(this).data('monitor-id');
+        let topLimit = parseFloat($(`#monitor-${monitorId}-top-price`).text())
+        let bottomLimit = parseFloat($(`#monitor-${monitorId}-bottom-price`).text())
+        $("#edit_price_limit_top").val(topLimit);
+        $("#edit_price_limit_bottom").val(bottomLimit);
+        $("#edit-limit-monitor-id").val(monitorId);
+    });
+
+    // archive monitor modal update values
+    $(".btn-archive-monitor").click(function (event){
+        let monitorId = $(this).data('monitor-id');
+        let stockName = $(`#monitor-${monitorId}-stock-label`).text();
+        $("#archive-monitor-btn").data('monitor-id', monitorId);
+        $("#archive-monitor-stock").text(stockName);
+    });
+
+    // archive monitor action
+    $("#archive-monitor-btn").click(function (event){
+        let monitorId = $(this).data('monitor-id');
+        let url = `/api/v1/user-monitor-stock/${monitorId}/`;
+        $.ajax({
+            url: url,
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'token ' + getCookie('token'),
+            },
+            success: function (response) {
+                showAlert('success', "Monitor arquivado com sucesso!");
+                loadingAnimation(false);
+                // close modal
+                $('#archiveMonitorModal').toggle();
+
+                // reload the page after 2 seconds
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            },
+            error: function (response) {
+                // show error message using bootstrap alert
+                showAlert('danger', "Erro ao arquivar monitor. Tente novamente mais tarde.");
+                loadingAnimation(false);
+                $('#archiveMonitorModal').toggle();
+            }
+        });
+    });
+
+    // edit limits form submit
+    $('#editMonitorLimitForm').submit(function (event) {
+        loadingAnimation();
+        event.preventDefault();
+        let monitorId = $("#edit-limit-monitor-id").val();
+        let jsonData = {
+            price_limit_top: $('#edit_price_limit_top').val(),
+            price_limit_bottom: $('#edit_price_limit_bottom').val(),
+        }
+
+        let url = $(this).attr('action') + monitorId + '/';
+        console.log(`URL: ${url}`);
+
+        $.ajax({
+            url: url,
+            method: 'PATCH',
+            data: JSON.stringify(jsonData),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'token ' + getCookie('token'),
+            },
+            success: function (response) {
+                showAlert('success', "Monitor atualizado com sucesso!");
+                loadingAnimation(false);
+                // close modal
+                $('#editMonitorLimitModal').toggle();
+
+                // reload the page after 2 seconds
+                setTimeout(function () {
+                    location.reload();
+                }, 2000);
+            },
+            error: function (response) {
+                // show error message using bootstrap alert
+                showAlert('danger', "Erro ao atualizar monitor. Tente novamente mais tarde.");
+                loadingAnimation(false);
+                $('#editMonitorLimitModal').toggle();
+            }
+        });
+    });
 });
 
 // money mask
@@ -221,8 +310,6 @@ function loadingAnimation(on = true) {
         return;
     }
     $("#loadingBackdrop").removeClass('active');// Hide the backdrop and spinner
-
-
 }
 
 // END OF [HELPER FUNCTIONS]

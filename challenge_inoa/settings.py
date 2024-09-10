@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from celery.schedules import crontab
+from kombu import Queue, Exchange
 
 load_dotenv()
 
@@ -145,11 +146,12 @@ REST_FRAMEWORK = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_ADDRESS')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_EMAIL_ADDRESS = os.environ.get('EMAIL_HOST_EMAIL_ADDRESS')
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_API_KEY')
 
 # Celery Config
 CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Redis server
@@ -158,6 +160,15 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = CELERY_BROKER_URL
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
+
+CELERY_QUEUES = (
+    Queue('default', Exchange('default'), routing_key='default'),  # default queue
+    Queue('email_queue', Exchange('email'), routing_key='email_queue'),  # email queue
+)
+
+CELERY_ROUTES = {
+    'engine.tasks.send_email_task': {'queue': 'email_queue'},  # Route the task to a specific queue
+}
 
 STOCK_INTERVAL_CHOICES = [
     (1, '1 minuto'),

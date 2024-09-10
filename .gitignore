@@ -9,5 +9,6 @@ db.sqlite3
 .celery-worker.log
 .celery-beat.pid
 .celery-worker.pid
+.celery-email-worker.pid
 celerybeat-schedule
 media/*

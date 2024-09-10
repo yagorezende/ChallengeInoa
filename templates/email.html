@@ -1,9 +1,14 @@
 <html>
 <body>
-    <h1>Olá, {{ monitor.user.name }}!</h1>
+    <h1>Olá, {{ monitor.user.first_name }} {{ monitor.user.last_name }}!</h1>
+    <br>
     <p>Alerta configurado para o ativo {{ monitor.stock.symbol }} - {{ monitor.stock.company_name }}</p>
+    <br>
     <p>O ativo está com o valor de R${{ stock_price.price|floatformat:2 }}</p>
-    <strong>Clique <a href="#">aqui</a> para {{ tip }} do ativo</strong>
+    <br>
+    <strong>Clique <a href="http://localhost:8080">aqui</a> para {{ tip }} do ativo</strong>
+    <br>
     <p>Atenciosamente, <br>Equipe de Monitoramento de Ativos INOA Stocks</p>
+    <br>
 </body>
 </html>

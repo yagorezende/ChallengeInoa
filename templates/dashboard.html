@@ -156,28 +156,39 @@
                                     </div>
                                     <div class="col-3">
                                         <div class="numbers">
-                                            <h4 class="card-title">{{ monitor.stock }}</h4>
+                                            <h4 class="card-title" id="monitor-{{ monitor.id }}-stock-label">{{ monitor.stock }}</h4>
                                             <div class="vstack">
                                                 <div class="text">
-                                                    <p>Valor Atual R$ <span id="monitor-{{ monitor.id }}-current-price">N/A</span></p>
-                                                    <p>Valor de Abertura R$ <span id="monitor-{{ monitor.id }}-open-price">N/A</span></p>
-                                                    <p>Variação R$ <span id="monitor-{{ monitor.id }}-variation-price">N/A</span></p>
-                                                    
+                                                    <p>Valor Atual R$ <span id="monitor-{{ monitor.id }}-current-price">N/A</span>
+                                                    </p>
+                                                    <p>Valor de Abertura R$ <span
+                                                            id="monitor-{{ monitor.id }}-open-price">N/A</span></p>
+                                                    <p>Variação R$ <span id="monitor-{{ monitor.id }}-variation-price">N/A</span>
+                                                    </p>
+
                                                     <!-- Divider -->
                                                     <hr class="divider">
-                                                    <p>Limite Superior R$ {{ monitor.price_limit_top }}</p>
-                                                    <p>Limite Inferior R$ {{ monitor.price_limit_bottom }}</p>
+                                                    <p>Limite Superior R$ <span
+                                                            id="monitor-{{ monitor.id }}-top-price">{{ monitor.price_limit_top }}</span>
+                                                    </p>
+                                                    <p>Limite Inferior R$ <span
+                                                            id="monitor-{{ monitor.id }}-bottom-price">{{ monitor.price_limit_bottom }}</span>
+                                                    </p>
                                                 </div>
+                                                <a href="#" data-bs-toggle="modal"
+                                                   data-bs-target="#editMonitorLimitModal"
+                                                   class="btn btn-round btn-primary mb-2 edit-limit-modal"
+                                                   data-monitor-id="{{ monitor.id }}">Editar Limites</a>
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#archiveMonitorModal"
+                                                   class="btn btn-round btn-outline-danger btn-archive-monitor" data-monitor-id="{{ monitor.id }}">Desativar</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer">
-                                <p>Criado em {{ monitor.created_at }}</p>
-                                <div class="stats float-end">
-                                    <a href="#" class="btn btn-round btn-outline-danger">Desativar</a>
-                                </div>
+                                <p>Criado em {{ monitor.created_at }} <strong>com periodo
+                                    de {{ monitor.interval }}m</strong></p>
                             </div>
                         </div>
                     {% endfor %}

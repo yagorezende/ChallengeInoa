@@ -1,8 +1,6 @@
-import pandas as pd
-from dill import settings
+from django.conf import settings
 from django.core.mail import send_mail
 from django.core.management import BaseCommand
-from standard.models import Stock
 
 
 class Command(BaseCommand):
@@ -13,9 +11,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         send_mail(
-            subject='[Venda] INOA Stocks',
+            subject='[Venda de Ativo] INOA Stocks',
             message='Corpo do Email',
-            from_email=settings.EMAIL_HOST_USER,
+            from_email=settings.EMAIL_HOST_EMAIL_ADDRESS,
             recipient_list=[options.get('target')]
         )
 

@@ -44,7 +44,7 @@ class UserMonitorStockListAPIView(MultiSerializerListApiView, CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        data_dict = dict((key, value)  for key, value in request.data.items())
+        data_dict = dict((key, value) for key, value in request.data.items())
         data_dict['user'] = user.id
         serializer = self.get_serializer(data=data_dict)
         if serializer.is_valid():
@@ -58,6 +58,7 @@ class UserMonitorStockDetailAPIView(MultiSerializerDetailApiView):
     queryset = UserMonitorStock.objects.all()
     basic_serializer_class = UserMonitorStockBasicSerializer
     aggregated_serializer_class = UserMonitorStockAggregatedSerializer
+    lookup_field = 'id'
 
 
 class UserStockNotificationHistoryListAPIView(MultiSerializerListApiView, CreateAPIView):
@@ -111,4 +112,3 @@ class UserMonitorStockDataView(APIView):
         }
 
         return JsonResponse(data, safe=False, status=status.HTTP_200_OK)
-

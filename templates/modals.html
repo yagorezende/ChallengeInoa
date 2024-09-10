@@ -81,4 +81,64 @@
             </div>
         </div>
     </div>
+    
+    <div class="modal fade" id="editMonitorLimitModal" tabindex="-1" aria-labelledby="editMonitorLimitModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editMonitorLimitModalLabel">Editar Limites</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editMonitorLimitForm" action="/api/v1/user-monitor-stock/" method="put">
+                    <input type="hidden" id="edit-limit-monitor-id">
+                    <div class="modal-body">
+                        <div class="container mt-2 w-100">
+                            <div class="d-grid gap">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">R$</span>
+                                    <span class="input-group-text">Limite superior</span>
+                                    <input type="text" id="edit_price_limit_top" name="price_limit_top"
+                                           class="form-control money-mask" value="0.00"
+                                           aria-label="Valor em reais (com ponto nas casas decimais)">
+                                </div>
+
+                                <div class="input-group">
+                                    <input type="text" id="edit_price_limit_bottom" name="price_limit_bottom"
+                                           class="form-control money-mask" value="0.00"
+                                           aria-label="Valor em reais (com ponto nas casas decimais)">
+                                    <span class="input-group-text">R$</span>
+                                    <span class="input-group-text">Limite inferior</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-round btn-outline-dark" data-bs-dismiss="modal">Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-round dark-btn">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="archiveMonitorModal" tabindex="-1" aria-labelledby="archiveMonitorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="archiveMonitorModalLabel">Desativar Monitor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h5>Deseja desativar o monitor <span id="archive-monitor-stock"></span>?</h5>
+                </div>
+                <div class="modal-footer">
+                    <div class="float-end">
+                        <button type="button" class="btn btn-round btn-outline-dark" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-round dark-btn" id="archive-monitor-btn" data-monitor-id="0">Desativar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
